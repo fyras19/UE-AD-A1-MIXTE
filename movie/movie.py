@@ -19,11 +19,16 @@ schema = make_executable_schema(type_defs, movie, query)
 
 mutation = MutationType()
 mutation.set_field('update_movie_rate', r.update_movie_rate)
-schema = make_executable_schema(type_defs, movie, query, mutation)
+mutation.set_field('add_movie', r.add_movie)
 
 actor = ObjectType('Actor')
 movie.set_field('actors',r.resolve_actors_in_movie)
+
+query.set_field('get_all_movies', r.get_all_movies)
+
+
 schema = make_executable_schema(type_defs, movie, query, mutation, actor)
+
 
 
 # root message
@@ -57,4 +62,4 @@ def graphql_server():
 
 if __name__ == "__main__":
     print("Server running in port %s"%(PORT))
-    app.run(host=HOST, port=PORT)
+    app.run(host=HOST, port=PORT, debug=True)

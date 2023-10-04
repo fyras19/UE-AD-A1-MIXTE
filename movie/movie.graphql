@@ -1,10 +1,13 @@
 type Query {
     movie_with_id(_id: String!): Movie
+    get_all_movies: [Movie]
+    
 }
 
 
 type Mutation {
     update_movie_rate(_id: String!, _rate: Float!): Movie
+    add_movie(_title:String!, _rating:Float!, _director:String!, _id:String!): Movie
 }
 
 
