@@ -1,12 +1,11 @@
 # REST API
-from flask import Flask, render_template, request, jsonify, make_response
-import requests
 import json
-from werkzeug.exceptions import NotFound
 
 # CALLING gRPC requests
 import grpc
-from concurrent import futures
+import requests
+from flask import Flask, request, jsonify, make_response
+
 import booking_pb2
 import booking_pb2_grpc
 
@@ -38,8 +37,7 @@ def get_user_byid(userid):
     return make_response(jsonify({"error": "User ID not found"}), 400)
 
 
-
-#GET Methods
+# GET Methods
 @app.route("/movies", methods=['GET'])
 def get_movies():
     body = """
@@ -52,7 +50,7 @@ def get_movies():
    }
    """
     response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
-    return make_response( jsonify({"movies":response.json()["data"]["get_all_movies"]}), response.status_code)
+    return make_response(jsonify({"movies": response.json()["data"]["get_all_movies"]}), response.status_code)
 
 
 @app.route("/movies/<title>", methods=['GET'])
@@ -61,7 +59,7 @@ def get_movie_wtitle(title):
    {
    movie_with_title(_title: 
    """
-    body += '"'+title+'"'
+    body += '"' + title + '"'
     body += """
    ){
       id
@@ -74,14 +72,15 @@ def get_movie_wtitle(title):
     response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
     return make_response(response.json(), response.status_code)
 
+
 @app.route("/movie_id/<id>", methods=['GET'])
 def get_movie_wid(id):
-   body = """
+    body = """
    {
    movie_with_id(_id: 
    """
-   body += '"' + id + '"'
-   body += """
+    body += '"' + id + '"'
+    body += """
    ){
       id
       title
@@ -90,23 +89,24 @@ def get_movie_wid(id):
    }
    }
    """
-   response = requests.post(f"http://{HOST}:3001/graphql",json={'query': body})
-   return make_response(response.json(), response.status_code)
+    response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
+    return make_response(response.json(), response.status_code)
 
-#POST Methods
+
+# POST Methods
 @app.route("/movie_id/<id>", methods=['POST'])
 def add_movie(id):
-   req = request.get_json()
-   title,rating,director = req['title'],req['rating'],req['director']
-   body = """mutation
+    req = request.get_json()
+    title, rating, director = req['title'], req['rating'], req['director']
+    body = """mutation
    {
    add_movie(_id: 
    """
-   body += '"'+id+'",'
-   body += '_title:"'+title+'",'
-   body += '_rating:"'+str(rating)+'",'
-   body += '_director:"'+director+'"'
-   body += """
+    body += '"' + id + '",'
+    body += '_title:"' + title + '",'
+    body += '_rating:"' + str(rating) + '",'
+    body += '_director:"' + director + '"'
+    body += """
    ){
       id
       title
@@ -115,18 +115,19 @@ def add_movie(id):
    }
    }
    """
-   response = requests.post(f"http://{HOST}:3001/graphql",json={'query': body})
-   return make_response(response.json(), response.status_code)
+    response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
+    return make_response(response.json(), response.status_code)
+
 
 @app.route("/movie_id/<id>/<rate>", methods=['POST'])
-def update_movie_rate(id,rate):
-   body = """mutation
+def update_movie_rate(id, rate):
+    body = """mutation
    {
    update_movie_rate(_id: 
    """
-   body += '"'+id+'",'
-   body += '_rate:"'+rate+'"'
-   body += """
+    body += '"' + id + '",'
+    body += '_rate:"' + rate + '"'
+    body += """
    ){
       id
       title
@@ -135,17 +136,18 @@ def update_movie_rate(id,rate):
    }
    }
    """
-   response = requests.post(f"http://{HOST}:3001/graphql",json={'query': body})
-   return make_response(response.json(), response.status_code)
+    response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
+    return make_response(response.json(), response.status_code)
+
 
 @app.route("/movie_id/<id>", methods=['DELETE'])
 def del_movie(id):
-   body = """mutation
+    body = """mutation
    {
    delete_movie(_id: 
    """
-   body += '"'+id+'"'
-   body += """
+    body += '"' + id + '"'
+    body += """
    ){
       id
       title
@@ -154,8 +156,8 @@ def del_movie(id):
    }
    }
    """
-   response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
-   return make_response(response.json(), response.status_code)
+    response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
+    return make_response(response.json(), response.status_code)
 
 
 @app.route("/bookings/<userid>", methods=['GET'])
@@ -208,8 +210,6 @@ def add_booking_by_user(userid):
         response = {"userid": userid, "dates": dates}
         return make_response(jsonify(response), 200)
     return make_response(jsonify({"error": "Could not add booking for user"}), 400)
-
-
 
 
 if __name__ == "__main__":
