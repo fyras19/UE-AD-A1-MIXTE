@@ -16,7 +16,7 @@ def update_movie_rate(_, info, _id, _rate):
         movies = json.load(rfile)
         for movie in movies['movies']:
             if movie['id'] == _id:
-                movie['rating'] = _rate
+                movie['rating'] = float(_rate)
                 newmovie = movie
                 newmovies = movies
     with open('{}/data/movies.json'.format("."), "w") as wfile:
@@ -34,7 +34,7 @@ def resolve_actors_in_movie(movie, info):
 def add_movie(_, info, _title, _rating, _director, _id):
     with open('{}/data/movies.json'.format("."), "r") as rfile:
         data = json.load(rfile)
-    movie = {"title": _title, "rating": _rating, "director": _director, "id": _id, "actors": []}
+    movie = {"title": _title, "rating": float(_rating), "director": _director, "id": _id, "actors": []}
     data["movies"].append(movie)
     with open('{}/data/movies.json'.format("."), "w") as wfile:
         json.dump(data, wfile)

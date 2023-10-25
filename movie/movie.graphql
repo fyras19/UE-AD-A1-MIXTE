@@ -6,8 +6,8 @@ type Query {
 
 
 type Mutation {
-    update_movie_rate(_id: String!, _rate: Float!): Movie
-    add_movie(_title:String!, _rating:Float!, _director:String!, _id:String!): Movie
+    update_movie_rate(_id: String!, _rate: String!): Movie
+    add_movie(_title:String!, _rating:String!, _director:String!, _id:String!): Movie
     delete_movie(_id: String!): Movie
 }
 
