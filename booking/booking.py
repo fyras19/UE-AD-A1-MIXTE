@@ -28,7 +28,8 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
         with grpc.insecure_channel('localhost:3002') as channel:
             stub = showtime_pb2_grpc.ShowtimeStub(channel)
             userid, date, movieid = request.userid, request.date, request.movieid
-            movies_by_date = stub.GetMoviesByDate(date)
+            date_slot = showtime_pb2.DateSlot(date=date)
+            movies_by_date = stub.GetMoviesByDate(date_slot)
             if movieid not in movies_by_date.movies:
                 return booking_pb2.BookingInfo(userid="", dates=[])
             for booking in self.db:
@@ -79,7 +80,7 @@ def run():
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     booking_pb2_grpc.add_BookingServicer_to_server(BookingServicer(), server)
-    server.add_insecure_port('[::]:3001')
+    server.add_insecure_port('[::]:3003')
     server.start()
     server.wait_for_termination()
 
