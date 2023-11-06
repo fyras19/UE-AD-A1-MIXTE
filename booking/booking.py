@@ -25,7 +25,7 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
         return booking_pb2.BookingInfo(userid="", dates=[])
 
     def AddBooking(self, request, context):
-        with grpc.insecure_channel('localhost:3002') as channel:
+        with grpc.insecure_channel('showtime:3002') as channel:
             stub = showtime_pb2_grpc.ShowtimeStub(channel)
             userid, date, movieid = request.userid, request.date, request.movieid
             date_slot = showtime_pb2.DateSlot(date=date)
@@ -67,7 +67,7 @@ def get_movies_by_date(stub, date):
 
 
 def run():
-    with grpc.insecure_channel('localhost:3002') as channel:
+    with grpc.insecure_channel('showtime:3002') as channel:
         stub = showtime_pb2_grpc.ShowtimeStub(channel)
 
         print("-------------- GetSchedule --------------")

@@ -49,7 +49,7 @@ def get_movies():
    }
    }
    """
-    response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
+    response = requests.post(f"http://movie:3001/graphql", json={'query': body})
     return make_response(jsonify({"movies": response.json()["data"]["get_all_movies"]}), response.status_code)
 
 
@@ -69,7 +69,7 @@ def get_movie_wtitle(title):
    }
    }
    """
-    response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
+    response = requests.post(f"http://movie:3001/graphql", json={'query': body})
     return make_response(response.json(), response.status_code)
 
 
@@ -89,7 +89,7 @@ def get_movie_wid(id):
    }
    }
    """
-    response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
+    response = requests.post(f"http://movie:3001/graphql", json={'query': body})
     return make_response(response.json(), response.status_code)
 
 
@@ -115,7 +115,7 @@ def add_movie(id):
    }
    }
    """
-    response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
+    response = requests.post(f"http://movie:3001/graphql", json={'query': body})
     return make_response(response.json(), response.status_code)
 
 
@@ -136,7 +136,7 @@ def update_movie_rate(id, rate):
    }
    }
    """
-    response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
+    response = requests.post(f"http://movie:3001/graphql", json={'query': body})
     return make_response(response.json(), response.status_code)
 
 
@@ -156,13 +156,13 @@ def del_movie(id):
    }
    }
    """
-    response = requests.post(f"http://{HOST}:3001/graphql", json={'query': body})
+    response = requests.post(f"http://movie:3001/graphql", json={'query': body})
     return make_response(response.json(), response.status_code)
 
 
 @app.route("/bookings/<userid>", methods=['GET'])
 def get_booking_for_user(userid):
-    with grpc.insecure_channel('localhost:3003') as channel:
+    with grpc.insecure_channel('booking:3003') as channel:
         stub = booking_pb2_grpc.BookingStub(channel)
         user_id = booking_pb2.UsedID(userid=userid)
         bookings_by_user = stub.GetBookingsByUserID(user_id)
@@ -178,7 +178,7 @@ def get_booking_for_user(userid):
 
 @app.route("/<userid>/movies", methods=['GET'])
 def get_movies_for_user(userid):
-    with grpc.insecure_channel('localhost:3003') as channel:
+    with grpc.insecure_channel('booking:3003') as channel:
         stub = booking_pb2_grpc.BookingStub(channel)
         user_id = booking_pb2.UsedID(userid=userid)
         bookings_by_user = stub.GetBookingsByUserID(user_id)
@@ -200,7 +200,7 @@ def get_movies_for_user(userid):
 def add_booking_by_user(userid):
     req = request.get_json()
     date, movie_id = req["date"], req["movie"]
-    with grpc.insecure_channel('localhost:3003') as channel:
+    with grpc.insecure_channel('booking:3003') as channel:
         stub = booking_pb2_grpc.BookingStub(channel)
         user_booking = booking_pb2.UserBooking(userid=userid, date=date, movieid=movie_id)
         booking_info = stub.AddBooking(user_booking)
