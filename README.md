@@ -1,6 +1,6 @@
 # Description du projet
 
-Ce projet est une application basée sur une architecture mixte (GRPC et GraphQL) de microservices. Le schéma suivant indique les type d'architectuce entre les différentes architectures. 
+Ce projet est une application basée sur une architecture mixte (GRPC et GraphQL) de microservices. Le schéma suivant indique les types d'architecture considérés entre les différents microservices. 
 ![Alt text](sch%C3%A9ma.png)
 Dans le cadre de ce TP, nous nous sommes concentrés sur les 3 microservices "user", "booking" et "showtime" et on s'est limité au TP vert. Le repository contient des fichiers .py correspondant à chaque microservice.
 L'Open Api correspondante à chaque microservice résume les différentes requêtes que l'on peut utiliser pour interroger celui-ci ainsi que les endpoints associés.
